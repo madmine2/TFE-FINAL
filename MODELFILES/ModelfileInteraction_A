@@ -1,0 +1,24 @@
+FROM llama3
+
+TEMPLATE """{{ if .System }}<|start_header_id|>system<|end_header_id|>
+
+{{ .System }}<|eot_id|>{{ end }}{{ if .Prompt }}<|start_header_id|>user<|end_header_id|>
+
+{{ .Prompt }}<|eot_id|>{{ end }}<|start_header_id|>assistant<|end_header_id|>
+
+{{ .Response }}<|eot_id|>"""
+
+PARAMETER num_keep 24
+
+PARAMETER stop "<|start_header_id|>"
+
+PARAMETER stop "<|end_header_id|>"
+
+PARAMETER stop "<|eot_id|>"
+
+SYSTEM """
+You are an expert at identifying if a given fact is correctly mentionned in a description.
+You start by answering with the part of the description that is about the fact or if it is not mentionned you say that the description doesn't talk about the given fact.
+Then you answer shortly by saying "Correct" if it is correctly mentionned or "Wrong" if it isn't mentionned or wrongly mentionned.
+You ignore every other information in the description that are not relevant to the task.
+"""

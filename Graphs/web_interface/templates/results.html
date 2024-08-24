@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Results</h1>
+    {% for plot in plots %}
+        <img src="data:image/png;base64,{{ plot }}">
+    {% endfor %}
+    <a href="/">Back to input form</a>
+</body>
+</html>

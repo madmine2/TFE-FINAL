@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Analysis</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container-fluid {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0;
+        }
+        .form-group select[multiple] {
+            height: auto;
+            min-height: 250px;
+        }
+        .form-group label, .form-group input, .form-group select {
+            font-size: 1.3rem;
+        }
+        .form-group {
+            margin-bottom: 2rem;
+            margin-left: 4rem;
+            margin-right: 4rem;
+        }
+        .btn {
+            font-size: 1.5rem;
+            position: absolute;
+            bottom: -6rem;
+        }
+        .row .col-md-4 {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .row {
+            margin-left: -15px;
+            margin-right: -15px;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        .custom-select-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center mb-4">Model Analysis</h1>
+        <form method="POST" class="mx-auto row" style="max-width: 100%; max-height: 100%;">
+            <div class="col-md-4">
+                <div class="form-group custom-select-container">
+                    <label for="models">Models:</label>
+                    <select class="form-control select2" id="models" name="models" multiple required>
+                           {% for model in models %}
+                        <option value="{{ model }}">{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group custom-select-container">
+                    <label for="num_movies">Number of Movies:</label>
+                    <select class="form-control select2" id="num_movies" name="num_movies" multiple required>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100"  selected>100</option>
+                        <option value="200">200</option>
+                        <option value="300" selected>300</option>
+                        <option value="500">500</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="form-group custom-select-container">
+                    <label for="attributes">Attributes to Plot:</label>
+                    <select class="form-control select2" id="attributes" name="attributes" multiple>
+                        <option value="Accuracy" selected>Accuracy</option>
+                        <option value="precision" selected>Precision</option>
+                        <option value="recall" selected>Recall</option>
+                        <option value="specificity" selected>Specificity</option>
+                        <option value="falsePositiveRate" selected>False Positive Rate</option>
+                        <option value="fMeasure" selected>F-Measure</option>
+                        <option value="scoreBadOutput">Score Bad  Output</option>
+                        <option value="scoreTruePositive">Score True Positive</option>
+                        <option value="scoreTrueNegative">Score True Negative</option>
+                        <option value="scoreFalsePositive">Score False Positive</option>
+                        <option value="scoreFalseNegative">Score False Negative</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="gpt_temp">GPT Temperature:</label>
+                    <input type="text" class="form-control" id="gpt_temp" name="gpt_temp" value="0.2" required>
+                </div>
+                <div class="form-group">
+                    <label for="ollama_temp">Ollama Temperature:</label>
+                    <input type="text" class="form-control" id="ollama_temp" name="ollama_temp" value="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block mt-4">Generate Plots</button>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="form-group custom-select-container">
+                    <label for="nameForDistinctionInColor">Attribute for distinction in color:</label>
+                    <select class="form-control select2" id="nameForDistinctionInColor" name="nameForDistinctionInColor" multiple>
+                        <option value="numberOfAgent" >numberOfAgent</option>
+                        <option value="NumberOfMovies" selected>NumberOfMovies</option>
+                        
+                    </select>
+                </div>
+                <div class="form-group custom-select-container">
+                    <label for="attributsForDistinctionInColor">Attributes for distinction in color:</label>
+                    <select class="form-control select2" id="attributsForDistinctionInColor" name="attributsForDistinctionInColor" multiple>
+                        <option value=1 >1</option>
+                        <option value=3 >3</option>
+                        <option value=100 selected>100</option>
+                        <option value=300 >300</option>
+                    </select>
+                </div>
+                  <div class="form-group">
+                    <label for="plotWidth">Width of the plots:</label>
+                      <input type="text" class="form-control" id="plotWidth" name="plotWidth" value="12" required>
+                </div>
+                  <div class="form-group">
+                    <label for="plotheight">Height of the plots:</label>
+                    <input type="text" class="form-control" id="plotheight" name="plotheight" value="6" required>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- jQuery and Select2 JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+        // Initialize Select2
+        $('.select2').select2({
+            width: '100%',
+            placeholder: 'Select an option',
+            allowClear: true
+        });
+
+        // Refresh Select2 to display the selected values
+        $('.select2').each(function() {
+            $(this).trigger('change');
+        });
+    });
+    </script>
+</body>
+</html>
